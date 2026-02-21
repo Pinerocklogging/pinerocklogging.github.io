@@ -1,470 +1,291 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pine Rock Logging</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pine Rock Logging</title>
 
-  <style>
-    :root{
-      --dark:#123625;
-      --dark2:#1f4a34;
-      --green:#2e7d55;
-      --bg:#f4f6f5;
-      --text:#1f2937;
-      --muted:#6b7280;
-      --card:#ffffff;
-    }
+<style>
+:root{
+  --dark:#0f172a;
+  --accent:#2f855a;
+  --accent2:#3b82f6;
+  --bg:#f3f6fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+}
 
-    *{ box-sizing:border-box; }
+*{box-sizing:border-box;}
 
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height:1.6;
-    }
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
 
-    /* Top bar */
-    .topbar{
-      background: #0f2a1d;
-      color: #d8f3e5;
-      font-size: 14px;
-      padding: 8px 14px;
-      display:flex;
-      gap:14px;
-      justify-content:center;
-      flex-wrap:wrap;
-    }
-    .topbar a{ color:#d8f3e5; text-decoration:none; font-weight:700; }
-    .topbar span{ opacity:.9; }
+/* TOP BAR */
+.topbar{
+  background:#0f172a;
+  color:#e5e7eb;
+  padding:8px;
+  text-align:center;
+  font-size:14px;
+}
 
-    /* Nav */
-    nav{
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(18,54,37,.96);
-      backdrop-filter: blur(6px);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    .nav-inner{
-      max-width:1100px;
-      margin:auto;
-      padding: 12px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      flex-wrap:wrap;
-    }
-    .brand{
-      color:#fff;
-      font-weight:900;
-      letter-spacing:.3px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-size:16px;
-    }
-    .badge{
-      font-size:12px;
-      background: rgba(46,125,85,.2);
-      border: 1px solid rgba(46,125,85,.55);
-      color:#d8f3e5;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-weight:800;
-    }
-    .nav-links a{
-      color:#fff;
-      text-decoration:none;
-      font-weight:800;
-      margin:0 10px;
-      opacity:.92;
-      white-space:nowrap;
-    }
-    .nav-links a:hover{ opacity:1; text-decoration:underline; }
+/* NAV */
+nav{
+  background:white;
+  border-bottom:1px solid #e5e7eb;
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+.nav-inner{
+  max-width:1100px;
+  margin:auto;
+  padding:14px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.brand{
+  font-weight:900;
+  font-size:18px;
+}
+.badge{
+  background:#e6f4ea;
+  color:#166534;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  margin-left:8px;
+  font-weight:bold;
+}
+.nav-links a{
+  margin:0 12px;
+  text-decoration:none;
+  color:#111827;
+  font-weight:bold;
+}
 
-    /* Hero */
-    header.hero{
-      background: radial-gradient(900px 400px at 15% 20%, rgba(46,125,85,.35), transparent 60%),
-                  linear-gradient(135deg, #0f2a1d 0%, #184231 55%, #0f2a1d 100%);
-      color:#fff;
-      padding: 64px 18px 46px;
-    }
-    .hero-inner{
-      max-width:1100px;
-      margin:auto;
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:28px;
-      align-items:center;
-    }
-    .hero h1{
-      margin:0 0 8px;
-      font-size:42px;
-      line-height:1.1;
-      letter-spacing:.2px;
-    }
-    .hero p{
-      margin:0 0 18px;
-      font-size:16px;
-      color:#e8fff3;
-      opacity:.95;
-      max-width: 680px;
-    }
-    .hero .cta{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-    .btn{
-      display:inline-block;
-      padding: 12px 18px;
-      border-radius: 10px;
-      text-decoration:none;
-      font-weight:900;
-      letter-spacing:.2px;
-      border: 1px solid rgba(255,255,255,.15);
-    }
-    .btn.primary{
-      background: var(--green);
-      color:#fff;
-      border-color: rgba(255,255,255,.12);
-      box-shadow: 0 10px 24px rgba(0,0,0,.25);
-    }
-    .btn.secondary{
-      background: rgba(255,255,255,.08);
-      color:#fff;
-    }
-    .hero-card{
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.12);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 18px 40px rgba(0,0,0,.25);
-    }
-    .hero-card h3{
-      margin:0 0 10px;
-      font-size:16px;
-      color:#fff;
-    }
-    .hero-card .item{
-      display:flex;
-      justify-content:space-between;
-      gap:14px;
-      padding:10px 0;
-      border-top: 1px solid rgba(255,255,255,.10);
-      color:#e8fff3;
-      font-weight:700;
-      font-size:14px;
-    }
-    .hero-card .item:first-of-type{ border-top:none; }
+/* HERO — NEW BEAUTIFUL COLOR */
+.hero{
+  background:linear-gradient(135deg,#0f172a 0%, #1e3a8a 50%, #0ea5e9 100%);
+  color:white;
+  padding:70px 20px 50px;
+}
+.hero-inner{
+  max-width:1100px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1.2fr .8fr;
+  gap:30px;
+}
+.hero h1{
+  font-size:42px;
+  margin-bottom:10px;
+}
+.hero p{
+  color:#e0f2fe;
+}
 
-    /* Sections */
-    .section{
-      max-width:1100px;
-      margin: auto;
-      padding: 56px 18px;
-    }
-    .title{
-      margin:0 0 10px;
-      font-size:28px;
-      letter-spacing:.2px;
-    }
-    .subtitle{
-      margin:0 0 24px;
-      color: var(--muted);
-      max-width: 850px;
-    }
+/* BUTTONS */
+.btn{
+  display:inline-block;
+  padding:12px 22px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:bold;
+  margin-right:10px;
+}
+.btn.primary{
+  background:#22c55e;
+  color:white;
+}
+.btn.secondary{
+  background:rgba(255,255,255,0.15);
+  color:white;
+}
 
-    /* Quick stats */
-    .stats{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap:14px;
-      margin-top: 18px;
-    }
-    .stat{
-      background: var(--card);
-      border-radius: 14px;
-      padding: 16px;
-      box-shadow: 0 6px 18px rgba(0,0,0,.07);
-      border: 1px solid rgba(0,0,0,.05);
-    }
-    .stat .k{ font-weight:900; font-size:18px; }
-    .stat .v{ color: var(--muted); font-weight:700; font-size:13px; margin-top:4px; }
+/* QUICK INFO CARD */
+.hero-card{
+  background:rgba(255,255,255,0.12);
+  padding:20px;
+  border-radius:14px;
+  backdrop-filter:blur(8px);
+}
+.hero-card .item{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-top:1px solid rgba(255,255,255,0.2);
+}
 
-    /* Services */
-    .services{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap:18px;
-      margin-top: 18px;
-    }
-    .card{
-      background: var(--card);
-      border-radius: 14px;
-      padding: 18px;
-      box-shadow: 0 8px 22px rgba(0,0,0,.07);
-      border: 1px solid rgba(0,0,0,.05);
-    }
-    .card h3{ margin:0 0 6px; }
-    .card p{ margin:0; color: var(--muted); }
+/* SECTIONS */
+.section{
+  max-width:1100px;
+  margin:auto;
+  padding:60px 20px;
+}
+.title{
+  font-size:28px;
+  margin-bottom:10px;
+}
+.subtitle{
+  color:var(--muted);
+  margin-bottom:25px;
+}
 
-    /* Equipment gallery */
-    .gallery{
-      display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap:16px;
-      margin-top: 18px;
-    }
-    .gallery .imgcard{
-      background: var(--card);
-      border-radius: 14px;
-      overflow:hidden;
-      border: 1px solid rgba(0,0,0,.06);
-      box-shadow: 0 10px 24px rgba(0,0,0,.08);
-    }
-    .gallery img{
-      width:100%;
-      height:170px;
-      object-fit: cover;
-      display:block;
-    }
-    .imgcap{
-      padding: 12px 14px;
-      font-weight:900;
-      color: #0f2a1d;
-      font-size: 14px;
-    }
+/* SERVICES */
+.services{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:20px;
+}
+.card{
+  background:var(--card);
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 8px 24px rgba(0,0,0,0.08);
+}
 
-    /* Contact */
-    .contact-box{
-      background: linear-gradient(135deg, rgba(46,125,85,.12), rgba(18,54,37,.08));
-      border: 1px solid rgba(0,0,0,.05);
-      border-radius: 16px;
-      padding: 18px;
-      box-shadow: 0 10px 26px rgba(0,0,0,.07);
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:18px;
-      align-items:start;
-    }
-    .contact-box p{ margin: 8px 0; }
-    .contact-box strong{ color:#0f2a1d; }
-    .contact-actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-start;
-      margin-top: 10px;
-    }
+/* GALLERY */
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:18px;
+}
+.imgcard{
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+.gallery img{
+  width:100%;
+  height:170px;
+  object-fit:cover;
+}
+.imgcap{
+  padding:12px;
+  font-weight:bold;
+  text-align:center;
+}
 
-    /* Footer */
-    footer{
-      background: #0f2a1d;
-      color:#e8fff3;
-      text-align:center;
-      padding: 26px 18px;
-      margin-top: 30px;
-    }
-    footer small{ opacity:.92; }
+/* CONTACT */
+.contact-box{
+  background:white;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
 
-    /* WhatsApp */
-    .whatsapp{
-      position:fixed;
-      bottom:20px;
-      right:20px;
-      background:#25D366;
-      color:white;
-      padding:14px 18px;
-      border-radius:50px;
-      text-decoration:none;
-      font-weight:900;
-      box-shadow:0 6px 16px rgba(0,0,0,0.28);
-      z-index:9999;
-    }
+/* FOOTER */
+footer{
+  background:#0f172a;
+  color:white;
+  text-align:center;
+  padding:25px;
+}
 
-    /* Responsive */
-    @media (max-width: 880px){
-      .hero-inner{ grid-template-columns: 1fr; }
-      .contact-box{ grid-template-columns: 1fr; }
-      .hero h1{ font-size: 36px; }
-    }
-  </style>
+/* WHATSAPP */
+.whatsapp{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#25D366;
+  color:white;
+  padding:14px 18px;
+  border-radius:50px;
+  text-decoration:none;
+  font-weight:bold;
+  box-shadow:0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* MOBILE */
+@media(max-width:880px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero h1{font-size:34px;}
+}
+</style>
 </head>
 
 <body>
 
-  <div class="topbar">
-    <span><strong>Established:</strong> 2003</span>
-    <span>•</span>
-    <span><strong>Phone:</strong> <a href="tel:+17073147056">+1 707 314 7056</a></span>
-    <span>•</span>
-    <span><strong>Email:</strong> <a href="mailto:pinerocklogging@usa.com">pinerocklogging@usa.com</a></span>
+<div class="topbar">
+Established: 2003 • USA & Canada Operations • Phone: +1 707 314 7056 • Email: pinerocklogging@usa.com
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="brand">
+      Pine Rock Logging <span class="badge">Est. 2003</span>
+    </div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#equipment">Equipment</a>
+      <a href="#contact">Contact</a>
+    </div>
   </div>
+</nav>
 
-  <nav>
-    <div class="nav-inner">
-      <div class="brand">
-        Pine Rock Logging <span class="badge">Est. 2003</span>
-      </div>
-      <div class="nav-links">
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#equipment">Equipment</a>
-        <a href="#contact">Contact</a>
-      </div>
-    </div>
-  </nav>
-
-  <header class="hero">
-    <div class="hero-inner">
-      <div>
-        <h1>Professional Timber Harvesting & Land Clearing</h1>
-        <p>
-          Pine Rock Logging provides safe, efficient, and professional logging operations — including
-          land clearing, timber harvesting, and site preparation — with a strong commitment to safety,
-          quality work, and environmental responsibility.
-        </p>
-        <div class="cta">
-          <a class="btn primary" href="#contact">Request a Quote</a>
-          <a class="btn secondary" href="#services">View Services</a>
-        </div>
-
-        <div class="stats">
-          <div class="stat">
-            <div class="k">Est. 2003</div>
-            <div class="v">Years of dependable operations</div>
-          </div>
-          <div class="stat">
-            <div class="k">Safety First</div>
-            <div class="v">Professional crews & best practices</div>
-          </div>
-          <div class="stat">
-            <div class="k">Reliable Hauling</div>
-            <div class="v">On-time transport & logistics</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="hero-card">
-        <h3>Quick Info</h3>
-        <div class="item"><span>Service Areas</span><span>USA</span></div>
-        <div class="item"><span>Phone</span><span>+1 707 314 7056</span></div>
-        <div class="item"><span>Email</span><span>pinerocklogging@usa.com</span></div>
-        <div class="item"><span>Available</span><span>Quotes & Scheduling</span></div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-
-    <section class="section" id="about">
-      <h2 class="title">About Us</h2>
-      <p class="subtitle">
-        Pine Rock Logging is a trusted logging contractor delivering safe, efficient, and professional timber operations.
-        We specialize in land clearing, timber harvesting, and site preparation with a strong commitment to safety and
-        environmental responsibility. <strong>Established in 2003</strong>, we take pride in building long-term relationships
-        and delivering reliable results.
+<header class="hero">
+  <div class="hero-inner">
+    <div>
+      <h1>Professional Timber Harvesting & Land Clearing</h1>
+      <p>
+        Pine Rock Logging delivers safe, efficient forestry operations across
+        the United States and Canada. We handle harvesting, land clearing,
+        hauling, and full-site preparation.
       </p>
-    </section>
 
-    <section class="section" id="services">
-      <h2 class="title">Our Services</h2>
-      <p class="subtitle">From harvesting to hauling, we provide end-to-end solutions for forestry and land development projects.</p>
+      <a class="btn primary" href="#contact">Request a Quote</a>
+      <a class="btn secondary" href="#services">View Services</a>
+    </div>
 
-      <div class="services">
-        <div class="card">
-          <h3>Timber Harvesting</h3>
-          <p>Professional tree felling and timber extraction with efficient site workflows.</p>
-        </div>
-        <div class="card">
-          <h3>Land Clearing</h3>
-          <p>Fast and effective clearing for new builds, roads, and development projects.</p>
-        </div>
-        <div class="card">
-          <h3>Log Hauling</h3>
-          <p>Reliable timber transport, loading, and hauling coordination.</p>
-        </div>
-        <div class="card">
-          <h3>Site Preparation</h3>
-          <p>Preparing land for construction and development with clean finishing.</p>
-        </div>
-      </div>
-    </section>
+    <div class="hero-card">
+      <h3>Quick Info</h3>
+      <div class="item"><span>Service Areas</span><span>USA & Canada</span></div>
+      <div class="item"><span>Phone</span><span>+1 707 314 7056</span></div>
+      <div class="item"><span>Email</span><span>pinerocklogging@usa.com</span></div>
+      <div class="item"><span>Established</span><span>2003</span></div>
+    </div>
+  </div>
+</header>
 
-    <!-- IMPORTANT: Equipment is BEFORE footer (so it won’t appear under the copyright) -->
-    <section class="section" id="equipment">
-      <h2 class="title">Our Equipment & Operations</h2>
-      <p class="subtitle">A look at our work environment, equipment, hauling, and operations in the field.</p>
+<section class="section" id="equipment">
+  <h2 class="title">Our Equipment & Operations</h2>
+  <p class="subtitle">Field operations across USA and Canada.</p>
 
-      <div class="gallery">
-        <div class="imgcard">
-          <img src="havester.jpg" alt="Harvester">
-          <div class="imgcap">Harvester Operations</div>
-        </div>
+  <div class="gallery">
+    <div class="imgcard"><img src="havester.jpg"><div class="imgcap">Harvester</div></div>
+    <div class="imgcard"><img src="forwarder.jpg"><div class="imgcap">Forwarder</div></div>
+    <div class="imgcard"><img src="buncher.jpg"><div class="imgcap">Feller Buncher</div></div>
+    <div class="imgcard"><img src="truck.jpg"><div class="imgcap">Log Hauling</div></div>
+    <div class="imgcard"><img src="CEO.jpeg"><div class="imgcap">On-Site Management</div></div>
+  </div>
+</section>
 
-        <div class="imgcard">
-          <img src="forwarder.jpg" alt="Forwarder">
-          <div class="imgcap">Forwarder & Loading</div>
-        </div>
+<section class="section" id="contact">
+  <h2 class="title">Contact Us</h2>
+  <div class="contact-box">
+    <p><strong>Phone:</strong> +1 707 314 7056</p>
+    <p><strong>Email:</strong> pinerocklogging@usa.com</p>
+    <p><strong>Service Areas:</strong> United States & Canada</p>
+  </div>
+</section>
 
-        <div class="imgcard">
-          <img src="buncher.jpg" alt="Buncher">
-          <div class="imgcap">Feller Buncher</div>
-        </div>
+<footer>
+© 2026 Pine Rock Logging. All rights reserved.
+</footer>
 
-        <div class="imgcard">
-          <img src="truck.jpg" alt="Log Truck">
-          <div class="imgcap">Log Hauling</div>
-        </div>
-
-        <div class="imgcard">
-          <img src="CEO.jpeg" alt="Team Lead">
-          <div class="imgcap">On-Site Management</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="contact">
-      <h2 class="title">Contact Us</h2>
-      <p class="subtitle">Ready to start your project? Reach out today and we’ll respond as soon as possible.</p>
-
-      <div class="contact-box">
-        <div>
-          <p><strong>Phone:</strong> <a href="tel:+17073147056">+1 707 314 7056</a></p>
-          <p><strong>Email:</strong> <a href="mailto:pinerocklogging@usa.com">pinerocklogging@usa.com</a></p>
-          <p><strong>Established:</strong> 2003</p>
-          <p><strong>Service:</strong> Timber harvesting, land clearing, hauling, site preparation</p>
-        </div>
-
-        <div>
-          <p><strong>Fast Quote:</strong> Click below to message us directly.</p>
-          <div class="contact-actions">
-            <a class="btn primary" href="https://wa.me/17073147056" target="_blank" rel="noopener">WhatsApp Us</a>
-            <a class="btn secondary" href="mailto:pinerocklogging@usa.com">Email Us</a>
-          </div>
-          <p style="margin-top:10px;color:var(--muted);font-weight:700;font-size:13px;">
-            Tip: Include your location, acreage, and timeline for a quicker estimate.
-          </p>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer>
-    <small>© 2026 Pine Rock Logging. All rights reserved.</small>
-  </footer>
-
-  <a class="whatsapp" href="https://wa.me/17073147056" target="_blank" rel="noopener">
-    Chat on WhatsApp
-  </a>
+<a class="whatsapp" href="https://wa.me/17073147056" target="_blank">
+Chat on WhatsApp
+</a>
 
 </body>
 </html>
