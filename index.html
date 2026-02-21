@@ -1,671 +1,695 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pine Rock Logging</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pine Rock Logging</title>
 
-  <style>
-    :root{
-      --bg1:#0b1220;
-      --bg2:#0c2a2c;
-      --card:rgba(255,255,255,.08);
-      --card2:rgba(255,255,255,.12);
-      --text:#eaf2ff;
-      --muted:rgba(234,242,255,.75);
-      --accent:#67f0a7;
-      --accent2:#4bd0ff;
-      --shadow:0 18px 50px rgba(0,0,0,.35);
-      --radius:18px;
-      --radius2:26px;
-      --max:1100px;
-    }
+<style>
+:root{
+  --bg1:#0b1220;
+  --bg2:#112a46;
+  --bg3:#123a2a;
+  --card:rgba(255,255,255,.08);
+  --card2:rgba(255,255,255,.12);
+  --stroke:rgba(255,255,255,.14);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.74);
+  --accent:#4ade80;
+  --accent2:#22c55e;
+  --shadow:0 22px 70px rgba(0,0,0,.45);
+}
 
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--text);
-      background: radial-gradient(1000px 600px at 15% 20%, rgba(103,240,167,.18), transparent 60%),
-                  radial-gradient(900px 600px at 85% 15%, rgba(75,208,255,.14), transparent 60%),
-                  linear-gradient(120deg, var(--bg1), var(--bg2));
-      overflow-x:hidden;
-    }
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+html{scroll-behavior:smooth;}
+body{
+  color:var(--text);
+  min-height:100vh;
+  background:radial-gradient(1200px 600px at 15% 15%, rgba(74,222,128,.18), transparent 55%),
+             radial-gradient(900px 500px at 90% 20%, rgba(56,189,248,.12), transparent 52%),
+             linear-gradient(-45deg,var(--bg1),var(--bg2),var(--bg3),#0a1a14);
+  background-size: 100% 100%, 100% 100%, 400% 400%;
+  animation:bgMove 16s ease infinite;
+  overflow-x:hidden;
+}
 
-    /* moving background glow */
-    .bg-anim{
-      position:fixed;
-      inset:-40%;
-      background:
-        radial-gradient(circle at 20% 30%, rgba(103,240,167,.22), transparent 45%),
-        radial-gradient(circle at 70% 25%, rgba(75,208,255,.18), transparent 45%),
-        radial-gradient(circle at 50% 75%, rgba(255,255,255,.08), transparent 50%);
-      filter: blur(40px);
-      animation: floaty 18s ease-in-out infinite alternate;
-      z-index:-2;
-      pointer-events:none;
-    }
-    @keyframes floaty{
-      0%{transform:translate3d(-2%, -1%, 0) scale(1.02);}
-      50%{transform:translate3d(2%, 2%, 0) scale(1.05);}
-      100%{transform:translate3d(-1%, 3%, 0) scale(1.08);}
-    }
+/* subtle floating grain */
+body:before{
+  content:"";
+  position:fixed;inset:0;
+  pointer-events:none;
+  background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity:.05;
+  mix-blend-mode: overlay;
+  animation:grain 8s linear infinite;
+}
+@keyframes bgMove{
+  0%{background-position:0 0,0 0,0% 50%;}
+  50%{background-position:0 0,0 0,100% 50%;}
+  100%{background-position:0 0,0 0,0% 50%;}
+}
+@keyframes grain{
+  0%{transform:translate3d(0,0,0)}
+  100%{transform:translate3d(-40px,-30px,0)}
+}
 
-    /* top info bar */
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:50;
-      backdrop-filter: blur(10px);
-      background: rgba(10,16,28,.55);
-      border-bottom:1px solid rgba(255,255,255,.10);
-    }
-    .topbar-inner{
-      max-width:var(--max);
-      margin:auto;
-      padding:10px 16px;
-      display:flex;
-      gap:14px;
-      align-items:center;
-      justify-content:center;
-      color:var(--muted);
-      font-weight:600;
-      font-size:13px;
-      flex-wrap:wrap;
-    }
-    .dot{opacity:.55}
+.container{max-width:1200px;margin:0 auto;padding:0 18px;}
+.topbar{
+  position:sticky;top:0;z-index:999;
+  backdrop-filter: blur(12px);
+  background: rgba(0,0,0,.35);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.topbar-inner{
+  display:flex;gap:14px;justify-content:center;align-items:center;
+  padding:10px 0;font-size:13px;color:var(--muted);
+}
+.dot{opacity:.5}
 
-    /* header / nav */
-    header{
-      max-width:var(--max);
-      margin: 0 auto;
-      padding: 18px 16px 0;
-    }
-    .nav{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:14px 16px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:260px;
-    }
-    .logo{
-      width:42px;
-      height:42px;
-      border-radius:12px;
-      object-fit:cover;
-      background: rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 10px 24px rgba(0,0,0,.25);
-    }
-    .brand h1{
-      font-size:16px;
-      margin:0;
-      letter-spacing:.2px;
-      line-height:1.1;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--muted);
-      margin-top:6px;
-      width:fit-content;
-    }
-    nav a{
-      color:var(--text);
-      text-decoration:none;
-      font-weight:700;
-      font-size:13px;
-      padding:10px 12px;
-      border-radius:12px;
-      transition: .2s ease;
-      opacity:.9;
-    }
-    nav a:hover{
-      background: rgba(255,255,255,.08);
-      transform: translateY(-1px);
-      opacity:1;
-    }
+.nav{
+  position:sticky;top:41px;z-index:998;
+  backdrop-filter: blur(12px);
+  background: rgba(0,0,0,.18);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.nav-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;gap:16px;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;min-width:260px;
+}
+.brand img{
+  width:52px;height:52px;border-radius:14px;
+  background:#fff;padding:6px;border:1px solid rgba(0,0,0,.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+.brand .name{font-weight:800;letter-spacing:.2px;}
+.badge{
+  margin-top:4px;
+  display:inline-flex;gap:10px;align-items:center;flex-wrap:wrap;
+  font-size:12px;color:rgba(255,255,255,.78);
+}
+.pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 12px;border-radius:999px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.10);
+}
+.pill strong{color:#fff;font-weight:700}
 
-    /* hero */
-    .hero{
-      max-width:var(--max);
-      margin: 18px auto 0;
-      padding: 26px 16px 8px;
-      display:grid;
-      grid-template-columns: 1.25fr .9fr;
-      gap:18px;
-      align-items:stretch;
-    }
-    .hero-left{
-      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-      border:1px solid rgba(255,255,255,.12);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow);
-      padding: 26px;
-      position:relative;
-      overflow:hidden;
-    }
-    .hero-left:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(600px 260px at 25% 20%, rgba(103,240,167,.18), transparent 55%),
-                  radial-gradient(600px 260px at 85% 35%, rgba(75,208,255,.16), transparent 55%);
-      z-index:0;
-      pointer-events:none;
-    }
-    .hero-left > *{position:relative; z-index:1}
-    .kicker{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:14px;
-    }
-    .chip{
-      padding:8px 12px;
-      border-radius:999px;
-      background: rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--muted);
-      font-weight:700;
-      font-size:12px;
-    }
-    .hero h2{
-      margin:0;
-      font-size:46px;
-      line-height:1.02;
-      letter-spacing:-.7px;
-    }
-    .hero p{
-      margin:14px 0 0;
-      color:var(--muted);
-      font-size:15px;
-      line-height:1.55;
-      max-width:62ch;
-    }
-    .cta{
-      margin-top:18px;
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:12px 16px;
-      border-radius:14px;
-      font-weight:800;
-      text-decoration:none;
-      color:#08111a;
-      background: linear-gradient(135deg, var(--accent), #b4ffd7);
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 16px 40px rgba(103,240,167,.16);
-      transition:.2s ease;
-    }
-    .btn:hover{transform: translateY(-1px);}
-    .btn.secondary{
-      color:var(--text);
-      background: rgba(255,255,255,.07);
-      box-shadow:none;
-    }
+.navlinks{
+  display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+}
+.navlinks a{
+  text-decoration:none;color:rgba(255,255,255,.86);
+  padding:10px 12px;border-radius:12px;
+  border:1px solid transparent;
+  transition: all .2s ease;
+}
+.navlinks a:hover{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.12);
+}
+.navcta{
+  display:flex;gap:10px;align-items:center;
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:12px 16px;border-radius:14px;
+  text-decoration:none;font-weight:800;
+  border:1px solid rgba(255,255,255,.12);
+  transition: transform .15s ease, filter .15s ease, background .2s ease;
+  user-select:none;
+}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.06);}
+.btn-primary{
+  background: linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#053318;border-color: rgba(0,0,0,.08);
+}
+.btn-ghost{
+  background:rgba(255,255,255,.06);color:#fff;
+}
 
-    .hero-right{
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius: var(--radius2);
-      box-shadow: var(--shadow);
-      padding:18px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
-    .info-title{
-      font-weight:900;
-      letter-spacing:.2px;
-      margin:4px 0 8px;
-      font-size:14px;
-      color:var(--muted);
-      text-transform:uppercase;
-    }
-    .info-row{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 12px;
-      border-radius:14px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.10);
-    }
-    .info-row b{color:var(--muted); font-size:13px}
-    .info-row span{font-weight:900}
+.hero{
+  padding:42px 0 22px;
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns: 1.15fr .85fr;
+  gap:18px;
+}
+@media (max-width: 980px){
+  .hero-grid{grid-template-columns:1fr; }
+  .brand{min-width:auto;}
+  .nav-inner{flex-wrap:wrap}
+}
+.card{
+  background: var(--card);
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+.hero-left{
+  padding:34px;
+  position:relative;
+  overflow:hidden;
+}
+.hero-left:before{
+  content:"";
+  position:absolute;inset:-120px;
+  background: radial-gradient(circle at 20% 30%, rgba(74,222,128,.18), transparent 55%),
+              radial-gradient(circle at 70% 40%, rgba(56,189,248,.14), transparent 52%);
+  transform: rotate(8deg);
+  opacity:.9;
+}
+.hero-left > *{position:relative; z-index:2;}
 
-    /* sections */
-    .section{
-      max-width:var(--max);
-      margin: 18px auto 0;
-      padding: 18px 16px;
-    }
-    .section h3{
-      margin: 0 0 10px;
-      font-size:20px;
-      letter-spacing:-.2px;
-    }
-    .section p{margin:0; color:var(--muted); line-height:1.6}
+.kicker{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  margin-bottom:18px;color:rgba(255,255,255,.82);
+}
+.kicker .pill{background:rgba(255,255,255,.09);}
+h1{
+  font-size: clamp(34px, 4.6vw, 56px);
+  line-height:1.02;
+  margin-bottom:14px;
+  letter-spacing:-.8px;
+}
+.lead{
+  color:var(--muted);
+  font-size: 16px;
+  line-height:1.6;
+  max-width: 720px;
+}
+.hero-actions{margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;}
 
-    /* cards grid */
-    .grid{
-      margin-top:14px;
-      display:grid;
-      grid-template-columns:repeat(12, 1fr);
-      gap:14px;
-    }
-    .card{
-      grid-column: span 3;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius: var(--radius);
-      padding:16px;
-      box-shadow: var(--shadow);
-      min-height:110px;
-      position:relative;
-      overflow:hidden;
-    }
-    .card:before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(280px 120px at 20% 20%, rgba(103,240,167,.18), transparent 55%);
-      opacity:.55;
-      z-index:0;
-    }
-    .card > *{position:relative; z-index:1}
-    .card h4{margin:0 0 8px; font-size:15px}
-    .card p{margin:0; font-size:13px; color:var(--muted)}
+.hero-right{
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.quick{
+  padding:18px;
+  border-radius:18px;
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.10);
+}
+.quick h3{font-size:16px;margin-bottom:10px;}
+.qrow{
+  display:flex;justify-content:space-between;gap:10px;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.86);
+}
+.qrow:last-child{border-bottom:none;}
+.qrow span{color:rgba(255,255,255,.70)}
+.qrow strong{font-weight:800}
+.note{
+  font-size:12px;color:rgba(255,255,255,.68);margin-top:10px;
+}
 
-    /* TRUST STRIP */
-    .trust{
-      margin-top:14px;
-      padding:14px;
-      border-radius: var(--radius);
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-    }
-    .trust b{font-size:14px}
-    .trust span{color:var(--muted); font-weight:700}
+/* stats */
+.stats{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:12px;
+}
+@media (max-width: 520px){ .stats{grid-template-columns:1fr;} }
+.stat{
+  padding:16px;border-radius:18px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  transition: transform .18s ease;
+}
+.stat:hover{transform: translateY(-2px);}
+.stat .num{
+  font-size:28px;font-weight:900;letter-spacing:-.5px;
+}
+.stat .lbl{color:rgba(255,255,255,.72);font-size:12px;margin-top:4px;}
 
-    /* equipment slideshow */
-    .equipment{
-      margin-top:18px;
-      padding:18px;
-      border-radius: var(--radius2);
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position:relative;
-    }
-    .equipment h3{margin:0 0 10px}
-    .stage{
-      position:relative;
-      height:360px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.18);
-      border:1px solid rgba(255,255,255,.10);
-      overflow:hidden;
-    }
-    .slide{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      opacity:0;
-      transform: translateY(12px) scale(.98);
-      transition: opacity 900ms ease, transform 900ms ease;
-      padding:18px;
-    }
-    .slide.active{
-      opacity:1;
-      transform: translateY(0) scale(1);
-    }
-    .slide img{
-      width:min(860px, 100%);
-      max-height:320px;
-      object-fit:cover;
-      border-radius:16px;
-      box-shadow:0 18px 60px rgba(0,0,0,.5);
-      border:1px solid rgba(255,255,255,.14);
-    }
-    .slide .cap{
-      position:absolute;
-      left:18px;
-      bottom:18px;
-      padding:10px 12px;
-      border-radius:14px;
-      background: rgba(0,0,0,.35);
-      border:1px solid rgba(255,255,255,.12);
-      color:var(--text);
-      font-weight:900;
-      font-size:13px;
-      backdrop-filter: blur(8px);
-    }
-    .dots{
-      display:flex;
-      gap:8px;
-      justify-content:center;
-      margin-top:12px;
-    }
-    .dot2{
-      width:10px;height:10px;border-radius:999px;
-      background: rgba(255,255,255,.22);
-      border:1px solid rgba(255,255,255,.18);
-    }
-    .dot2.on{background: linear-gradient(135deg, var(--accent), var(--accent2));}
+/* reveal animations */
+.reveal{opacity:0;transform:translateY(12px);transition: all .65s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+.delay1{transition-delay:.12s}
+.delay2{transition-delay:.24s}
+.delay3{transition-delay:.36s}
 
-    /* quote form */
-    .form{
-      margin-top:16px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:12px;
-    }
-    .form input, .form textarea, .form select{
-      width:100%;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color:var(--text);
-      outline:none;
-    }
-    .form textarea{grid-column: span 2; min-height:110px; resize:vertical;}
-    .form .full{grid-column: span 2;}
-    .form button{
-      padding:12px 16px;
-      border-radius:14px;
-      font-weight:900;
-      border:1px solid rgba(255,255,255,.18);
-      background: linear-gradient(135deg, var(--accent), #b4ffd7);
-      color:#08111a;
-      cursor:pointer;
-    }
-    .note{margin-top:10px; color:var(--muted); font-size:12px}
+/* Services */
+.section{padding:26px 0;}
+.section h2{
+  font-size:28px;margin:10px 0 14px;letter-spacing:-.3px;
+}
+.grid{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:14px;
+}
+@media (max-width: 980px){ .grid{grid-template-columns: repeat(2,1fr);} }
+@media (max-width: 520px){ .grid{grid-template-columns: 1fr;} }
 
-    /* footer + whatsapp */
-    footer{
-      margin-top:26px;
-      padding: 22px 16px 30px;
-      color:var(--muted);
-      text-align:center;
-    }
-    .wa{
-      position:fixed;
-      right:18px;
-      bottom:18px;
-      z-index:999;
-      text-decoration:none;
-      font-weight:900;
-      padding:14px 18px;
-      border-radius:999px;
-      color:#08111a;
-      background: linear-gradient(135deg, #25D366, #7CFFB6);
-      box-shadow:0 18px 60px rgba(37,211,102,.22);
-      border:1px solid rgba(255,255,255,.18);
-    }
+.svc{
+  padding:18px;border-radius:20px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  transform-style:preserve-3d;
+  transition: transform .18s ease, background .2s ease;
+}
+.svc:hover{
+  transform: perspective(900px) rotateX(6deg) rotateY(-6deg) translateY(-2px);
+  background:rgba(255,255,255,.085);
+}
+.svc h3{font-size:16px;margin-bottom:8px;}
+.svc p{color:rgba(255,255,255,.72);line-height:1.5;font-size:13px;}
+.icon{
+  width:44px;height:44px;border-radius:14px;
+  display:grid;place-items:center;margin-bottom:10px;
+  background:rgba(74,222,128,.16);
+  border:1px solid rgba(74,222,128,.25);
+}
 
-    /* responsive */
-    @media (max-width: 980px){
-      .hero{grid-template-columns:1fr}
-      .card{grid-column: span 6}
-      .brand{min-width:auto}
-      nav{display:none}
-      .form{grid-template-columns:1fr}
-      .form textarea{grid-column: span 1}
-      .form .full{grid-column: span 1}
-    }
-    @media (max-width: 560px){
-      .hero h2{font-size:34px}
-      .card{grid-column: span 12}
-      .stage{height:300px}
-      .slide img{max-height:260px}
-    }
-  </style>
+/* Equipment carousel (fade / slide) */
+.equip{
+  padding:18px;
+}
+.carousel{
+  position:relative;
+  height:320px;
+  border-radius:22px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
+}
+.slide{
+  position:absolute;inset:0;
+  opacity:0;
+  transform: translateX(30px) scale(.98);
+  transition: opacity .8s ease, transform .8s ease;
+}
+.slide.active{
+  opacity:1;
+  transform: translateX(0) scale(1);
+}
+.slide img{
+  width:100%;height:100%;object-fit:cover;
+  filter:saturate(1.05) contrast(1.05);
+}
+.slide:after{
+  content:"";
+  position:absolute;inset:0;
+  background: linear-gradient(to top, rgba(0,0,0,.65), transparent 55%),
+              linear-gradient(to right, rgba(0,0,0,.25), transparent 60%);
+}
+.caption{
+  position:absolute;left:18px;bottom:16px;right:18px;
+  z-index:2;
+}
+.caption .cap-title{
+  font-weight:900;font-size:18px;letter-spacing:-.2px;
+}
+.caption .cap-sub{
+  color:rgba(255,255,255,.75);font-size:12px;margin-top:4px;
+}
+.dots{
+  position:absolute;right:16px;bottom:16px;display:flex;gap:8px;z-index:3;
+}
+.dots button{
+  width:10px;height:10px;border-radius:999px;border:1px solid rgba(255,255,255,.28);
+  background:rgba(255,255,255,.12);
+  cursor:pointer;
+}
+.dots button.active{background:var(--accent);border-color: rgba(0,0,0,.2);}
+
+/* Quote form */
+.formwrap{
+  padding:18px;
+}
+form{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+@media(max-width:720px){ form{grid-template-columns:1fr;} }
+
+.field{
+  display:flex;flex-direction:column;gap:8px;
+}
+label{font-size:12px;color:rgba(255,255,255,.72);}
+input, select, textarea{
+  background:rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;
+  border-radius:14px;
+  padding:12px 12px;
+  outline:none;
+}
+textarea{min-height:110px;resize:vertical;grid-column:1/-1;}
+small{color:rgba(255,255,255,.62);}
+
+.form-actions{
+  grid-column:1/-1;
+  display:flex;gap:12px;align-items:center;flex-wrap:wrap;
+}
+.hint{
+  color:rgba(255,255,255,.65);font-size:12px;
+}
+
+/* Footer */
+footer{
+  margin-top:32px;
+  padding:26px 0 70px;
+  border-top:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.65);
+  text-align:center;
+}
+
+/* WhatsApp floating */
+.whatsapp{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:1000;
+  background: linear-gradient(135deg,#25D366,#1fb955);
+  color:#063;
+  padding:14px 18px;
+  border-radius:999px;
+  font-weight:900;
+  text-decoration:none;
+  box-shadow: 0 14px 34px rgba(0,0,0,.45);
+  border:1px solid rgba(0,0,0,.12);
+}
+.whatsapp span{color:#053318;}
+.whatsapp:hover{filter:brightness(1.04);transform:translateY(-1px);}
+</style>
 </head>
 
 <body>
-  <div class="bg-anim"></div>
 
-  <div class="topbar">
-    <div class="topbar-inner">
-      <span><b>Established:</b> 2003</span>
-      <span class="dot">•</span>
-      <span><b>Phone:</b> +1 707 314 7056</span>
-      <span class="dot">•</span>
-      <span><b>Email:</b> pinerocklogging@usa.com</span>
-      <span class="dot">•</span>
-      <span><b>Service Areas:</b> USA & Canada</span>
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="container topbar-inner">
+    <span><strong>Established:</strong> 2003</span>
+    <span class="dot">•</span>
+    <span><strong>Phone:</strong> +1 707 314 7056</span>
+    <span class="dot">•</span>
+    <span><strong>Email:</strong> pinerocklogging@usa.com</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="container nav-inner">
+    <div class="brand">
+      <!-- ✅ IMPORTANT: your logo file is named: logo.png.jpeg -->
+      <img src="logo.png.jpeg" alt="Pine Rock Logging Logo">
+      <div>
+        <div class="name">Pine Rock Logging</div>
+        <div class="badge">
+          <div class="pill">Trusted &amp; Reliable</div>
+          <div class="pill"><strong>Est.</strong> 2003</div>
+          <div class="pill">USA • Canada</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="navlinks">
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#equipment">Equipment</a>
+      <a href="#contact">Contact</a>
+    </div>
+
+    <div class="navcta">
+      <a class="btn btn-ghost" href="#services">View Services</a>
+      <a class="btn btn-primary" href="#contact">Request a Quote</a>
     </div>
   </div>
+</div>
 
-  <header>
-    <div class="nav">
-      <div class="brand">
-        <!-- IMPORTANT: your logo file must be named EXACTLY: logo.png -->
-        <img class="logo" src="logo.png" alt="Pine Rock Logging Logo" />
-        <div>
-          <h1>Pine Rock Logging</h1>
-          <div class="pill">Trusted & Reliable • Est. 2003</div>
-        </div>
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+
+    <div class="card hero-left reveal in">
+      <div class="kicker">
+        <div class="pill">Safe operations</div>
+        <div class="pill">On-time delivery</div>
+        <div class="pill">Quality work</div>
+        <div class="pill">Coverage: USA &amp; Canada</div>
       </div>
 
-      <nav>
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#equipment">Equipment</a>
-        <a href="#quote">Get a Quote</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="hero-left">
-        <div class="kicker">
-          <div class="chip">Safe operations</div>
-          <div class="chip">Quality work</div>
-          <div class="chip">On-time delivery</div>
-          <div class="chip">USA • Canada</div>
-        </div>
-
-        <h2>Professional Timber Harvesting<br/> & Land Clearing</h2>
-        <p>
-          Pine Rock Logging provides safe, efficient, and professional logging operations — including land clearing,
-          timber harvesting, hauling, and site preparation — with a strong commitment to safety, quality work,
-          and environmental responsibility.
-        </p>
-
-        <div class="cta">
-          <a class="btn" href="#quote">Request a Quote</a>
-          <a class="btn secondary" href="#services">View Services</a>
-        </div>
-      </div>
-
-      <aside class="hero-right">
-        <div class="info-title">Quick Info</div>
-
-        <div class="info-row"><b>Available</b> <span>Quotes & Scheduling</span></div>
-        <div class="info-row"><b>Industries</b> <span>Forestry • Land Clearing</span></div>
-        <div class="info-row"><b>Safety</b> <span>Best Practices</span></div>
-        <div class="info-row"><b>Coverage</b> <span>USA & Canada</span></div>
-      </aside>
-    </section>
-
-    <section id="about" class="section">
-      <h3>About Pine Rock Logging</h3>
-      <p>
-        Since <b>2003</b>, Pine Rock Logging has delivered dependable timber harvesting, land clearing, and hauling
-        services for projects of all sizes. We’re known for <b>trusted & reliable</b> delivery, professional crews,
-        and safe, well-managed operations.
+      <h1>Professional Timber<br/>Harvesting &amp; Land Clearing</h1>
+      <p class="lead">
+        Pine Rock Logging provides safe, efficient, and professional logging operations —
+        including land clearing, timber harvesting, hauling, and site preparation —
+        with a strong commitment to safety, quality work, and environmental responsibility.
       </p>
 
-      <div class="trust">
-        <b>Trusted & Reliable</b>
-        <span>Established 2003 • Professional crews • Safety-first • Consistent delivery</span>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#contact">Request a Quote</a>
+        <a class="btn btn-ghost" href="#equipment">See Equipment</a>
       </div>
-    </section>
+    </div>
 
-    <section id="services" class="section">
-      <h3>Services</h3>
-      <p>High-quality operations from planning to execution — with clear communication and dependable timelines.</p>
-
-      <div class="grid">
-        <div class="card">
-          <h4>Timber Harvesting</h4>
-          <p>Professional tree felling and timber extraction using modern best practices.</p>
-        </div>
-        <div class="card">
-          <h4>Land Clearing</h4>
-          <p>Efficient clearing for development, right-of-way, and site preparation.</p>
-        </div>
-        <div class="card">
-          <h4>Log Hauling</h4>
-          <p>Reliable transport and logistics to keep your project moving.</p>
-        </div>
-        <div class="card">
-          <h4>Site Preparation</h4>
-          <p>Grading, cleanup, and preparation to get your site ready for the next step.</p>
-        </div>
+    <div class="card hero-right">
+      <div class="quick reveal in delay1">
+        <h3>Quick Info</h3>
+        <div class="qrow"><span>Service Areas</span><strong>USA • Canada</strong></div>
+        <div class="qrow"><span>Phone</span><strong>+1 707 314 7056</strong></div>
+        <div class="qrow"><span>Email</span><strong>pinerocklogging@usa.com</strong></div>
+        <div class="qrow"><span>Available</span><strong>Quotes &amp; Scheduling</strong></div>
+        <div class="note">We can take projects anywhere work is needed.</div>
       </div>
-    </section>
 
-    <section id="equipment" class="section">
-      <div class="equipment">
-        <h3>Equipment & Operations (Auto Preview)</h3>
-        <p>Images fade in/out automatically — one after another.</p>
-
-        <div class="stage" aria-label="equipment slideshow">
-          <!-- IMPORTANT: These filenames must match your uploaded files exactly -->
-          <div class="slide active">
-            <img src="havester.jpg" alt="Harvester at work">
-            <div class="cap">Harvester Operations</div>
-          </div>
-
-          <div class="slide">
-            <img src="forwarder.jpg" alt="Forwarder loading logs">
-            <div class="cap">Forwarder Loading</div>
-          </div>
-
-          <div class="slide">
-            <img src="buncher.jpg" alt="Feller buncher in the forest">
-            <div class="cap">Feller Buncher</div>
-          </div>
-
-          <div class="slide">
-            <img src="truck.jpg" alt="Log hauling truck">
-            <div class="cap">Log Hauling Truck</div>
-          </div>
-
-          <div class="slide">
-            <img src="CEO.jpeg" alt="Site supervisor/CEO">
-            <div class="cap">On-Site Leadership</div>
-          </div>
+      <div class="stats">
+        <div class="stat reveal in delay2">
+          <div class="num" data-count="21">0</div>
+          <div class="lbl">Years of dependable operations</div>
         </div>
-
-        <div class="dots" id="dots" aria-hidden="true">
-          <div class="dot2 on"></div>
-          <div class="dot2"></div>
-          <div class="dot2"></div>
-          <div class="dot2"></div>
-          <div class="dot2"></div>
+        <div class="stat reveal in delay2">
+          <div class="num" data-count="1200">0</div>
+          <div class="lbl">Completed jobs (est.)</div>
+        </div>
+        <div class="stat reveal in delay2">
+          <div class="num" data-count="24">0</div>
+          <div class="lbl">Fast response (hours)</div>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section id="quote" class="section">
-      <h3>Request a Quote</h3>
-      <p>Fill this form and we’ll respond as soon as possible.</p>
+  </div>
+</section>
 
-      <!-- This form opens the user's email app (no server needed) -->
-      <form class="form" action="mailto:pinerocklogging@usa.com" method="post" enctype="text/plain">
-        <input name="Name" type="text" placeholder="Full Name" required />
-        <input name="Phone" type="tel" placeholder="Phone Number" required />
-        <input name="Email" type="email" placeholder="Email Address" required />
-        <select name="Service" required>
-          <option value="" disabled selected>Choose a Service</option>
-          <option>Timber Harvesting</option>
-          <option>Land Clearing</option>
-          <option>Log Hauling</option>
-          <option>Site Preparation</option>
-        </select>
+<!-- ABOUT -->
+<section id="about" class="section">
+  <div class="container">
+    <div class="card" style="padding:22px;">
+      <h2 class="reveal">About Pine Rock Logging</h2>
+      <p class="lead reveal delay1">
+        Since 2003, Pine Rock Logging has delivered dependable timber operations with professional crews,
+        modern equipment, and best-practice safety standards. We focus on clean execution, timely logistics,
+        and responsible environmental practices — across the USA and Canada.
+      </p>
+    </div>
+  </div>
+</section>
 
-        <input class="full" name="Location" type="text" placeholder="Project Location (City, State/Province)" />
-        <textarea name="Details" placeholder="Tell us about your project (acreage, timeline, requirements)"></textarea>
+<!-- SERVICES -->
+<section id="services" class="section">
+  <div class="container">
+    <h2 class="reveal">Services</h2>
+    <div class="grid">
+      <div class="svc reveal delay1">
+        <div class="icon">🌲</div>
+        <h3>Timber Harvesting</h3>
+        <p>Professional felling, processing, and extraction with strict safety control.</p>
+      </div>
+      <div class="svc reveal delay1">
+        <div class="icon">🪵</div>
+        <h3>Land Clearing</h3>
+        <p>Efficient clearing for development, access roads, and project sites.</p>
+      </div>
+      <div class="svc reveal delay2">
+        <div class="icon">🚚</div>
+        <h3>Log Hauling</h3>
+        <p>Reliable transport and on-time delivery with coordinated logistics.</p>
+      </div>
+      <div class="svc reveal delay2">
+        <div class="icon">🛠️</div>
+        <h3>Site Preparation</h3>
+        <p>Professional prep work for construction and long-term land use.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <button class="full" type="submit">Send Quote Request</button>
+<!-- EQUIPMENT (AUTO FADE SLIDER) -->
+<section id="equipment" class="section">
+  <div class="container">
+    <div class="card equip">
+      <h2 class="reveal">Equipment &amp; Operations</h2>
+      <p class="lead reveal delay1" style="margin-bottom:14px;">
+        Images rotate automatically — one appears, one disappears — for a premium presentation.
+      </p>
+
+      <div class="carousel reveal delay2" id="carousel">
+        <div class="slide active" data-title="Harvester" data-sub="Modern harvesting performance">
+          <img src="havester.jpg" alt="harvester">
+        </div>
+        <div class="slide" data-title="Forwarder" data-sub="Efficient transport from site to landing">
+          <img src="forwarder.jpg" alt="forwarder">
+        </div>
+        <div class="slide" data-title="Buncher" data-sub="Fast felling and grouping for processing">
+          <img src="buncher.jpg" alt="buncher">
+        </div>
+        <div class="slide" data-title="Log Truck" data-sub="Reliable hauling and scheduling">
+          <img src="truck.jpg" alt="truck">
+        </div>
+        <div class="slide" data-title="Field Operations" data-sub="Professional crews • Safety first">
+          <img src="CEO.jpeg" alt="CEO">
+        </div>
+
+        <div class="caption">
+          <div class="cap-title" id="capTitle">Harvester</div>
+          <div class="cap-sub" id="capSub">Modern harvesting performance</div>
+        </div>
+
+        <div class="dots" id="dots"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT / QUOTE FORM -->
+<section id="contact" class="section">
+  <div class="container">
+    <div class="card formwrap">
+      <h2 class="reveal">Request a Quote</h2>
+      <p class="lead reveal delay1" style="margin:8px 0 16px;">
+        Send your job details. We respond fast for scheduling and pricing.
+      </p>
+
+      <form class="reveal delay2" onsubmit="event.preventDefault(); alert('Quote request saved. Please contact us by phone/WhatsApp to finalize.');">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" placeholder="Your name" required>
+        </div>
+        <div class="field">
+          <label>Phone Number</label>
+          <input type="tel" placeholder="+1 ..." required>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="email" placeholder="you@email.com" required>
+        </div>
+        <div class="field">
+          <label>Service Needed</label>
+          <select required>
+            <option value="">Select</option>
+            <option>Timber Harvesting</option>
+            <option>Land Clearing</option>
+            <option>Log Hauling</option>
+            <option>Site Preparation</option>
+          </select>
+        </div>
+
+        <div class="field" style="grid-column:1/-1;">
+          <label>Project Details</label>
+          <textarea placeholder="Location, acres, timeline, access, special requests..." required></textarea>
+          <small>Tip: Include city/state (or province) so we can estimate logistics.</small>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" type="submit">Submit Quote Request</button>
+          <a class="btn btn-ghost" href="tel:+17073147056">Call Now</a>
+          <span class="hint">Or use WhatsApp button to chat instantly.</span>
+        </div>
       </form>
+    </div>
+  </div>
+</section>
 
-      <div class="note">
-        Tip: If your email app doesn’t open, you can still contact us directly using the phone/email below.
-      </div>
-    </section>
+<footer>
+  © 2026 Pine Rock Logging. All rights reserved.
+</footer>
 
-    <section id="contact" class="section">
-      <h3>Contact</h3>
-      <p><b>Phone:</b> +1 707 314 7056</p>
-      <p><b>Email:</b> pinerocklogging@usa.com</p>
-      <p><b>Service Areas:</b> USA & Canada (projects nationwide)</p>
-    </section>
+<a class="whatsapp" href="https://wa.me/17073147056" target="_blank">
+  <span>Chat on WhatsApp</span>
+</a>
 
-    <footer>
-      © 2026 Pine Rock Logging. All rights reserved.
-    </footer>
-  </main>
+<script>
+/* reveal on scroll */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting) e.target.classList.add('in');
+  });
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-  <a class="wa" href="https://wa.me/17073147056" target="_blank" rel="noopener">
-    Chat on WhatsApp
-  </a>
-
-  <script>
-    // slideshow: fade in/out each image
-    const slides = Array.from(document.querySelectorAll(".slide"));
-    const dots = Array.from(document.querySelectorAll("#dots .dot2"));
-    let i = 0;
-
-    function show(idx){
-      slides.forEach((s, n) => s.classList.toggle("active", n === idx));
-      dots.forEach((d, n) => d.classList.toggle("on", n === idx));
+/* counter animation */
+function animateCount(el, to){
+  let start = 0;
+  const dur = 1100;
+  const t0 = performance.now();
+  function tick(t){
+    const p = Math.min(1,(t-t0)/dur);
+    const val = Math.floor(start + (to-start)*p);
+    el.textContent = to >= 1000 ? val.toLocaleString() : val;
+    if(p<1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+const statsIO = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const nums = e.target.querySelectorAll('.num');
+      nums.forEach(n=>{
+        const to = parseInt(n.getAttribute('data-count'),10);
+        if(!n.dataset.done){
+          n.dataset.done = "1";
+          animateCount(n,to);
+        }
+      });
     }
+  });
+},{threshold:.4});
+document.querySelectorAll('.stats').forEach(s=>statsIO.observe(s));
 
-    setInterval(() => {
-      i = (i + 1) % slides.length;
-      show(i);
-    }, 3000);
-  </script>
+/* equipment carousel: appear/disappear (fade + slide) */
+const slides = Array.from(document.querySelectorAll('.slide'));
+const capTitle = document.getElementById('capTitle');
+const capSub = document.getElementById('capSub');
+const dots = document.getElementById('dots');
+
+let idx = 0;
+slides.forEach((_,i)=>{
+  const b = document.createElement('button');
+  b.addEventListener('click', ()=>go(i,true));
+  dots.appendChild(b);
+});
+function updateDots(){
+  Array.from(dots.children).forEach((d,i)=>d.classList.toggle('active', i===idx));
+}
+function go(i, manual=false){
+  slides[idx].classList.remove('active');
+  idx = i;
+  slides[idx].classList.add('active');
+  capTitle.textContent = slides[idx].dataset.title || "Equipment";
+  capSub.textContent = slides[idx].dataset.sub || "";
+  updateDots();
+  if(manual){
+    clearInterval(timer);
+    timer = setInterval(next, 4200);
+  }
+}
+function next(){
+  go((idx+1) % slides.length);
+}
+updateDots();
+let timer = setInterval(next, 4200);
+</script>
+
 </body>
 </html>
