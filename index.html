@@ -132,9 +132,7 @@ body:before{
   background:rgba(255,255,255,.06);color:#fff;
 }
 
-.hero{
-  padding:42px 0 22px;
-}
+.hero{padding:42px 0 22px;}
 .hero-grid{
   display:grid;
   grid-template-columns: 1.15fr .85fr;
@@ -152,6 +150,8 @@ body:before{
   box-shadow: var(--shadow);
   backdrop-filter: blur(14px);
 }
+
+/* HERO LEFT + FLOATING PHOTOS */
 .hero-left{
   padding:34px;
   position:relative;
@@ -166,6 +166,59 @@ body:before{
   opacity:.9;
 }
 .hero-left > *{position:relative; z-index:2;}
+
+/* Floating thumbnails (appear / disappear on the surface) */
+.float-deck{
+  position:absolute; inset:0;
+  pointer-events:none;
+  z-index:1;
+}
+.float{
+  position:absolute;
+  width:155px; height:105px;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.16);
+  box-shadow: 0 18px 50px rgba(0,0,0,.42);
+  transform: translate3d(0,0,0) rotate(0deg);
+  opacity:0;
+  filter:saturate(1.06) contrast(1.05);
+}
+.float img{width:100%;height:100%;object-fit:cover;}
+.float:after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(to top, rgba(0,0,0,.55), transparent 60%);
+}
+
+/* Different positions */
+.f1{top:16px; right:18px;}
+.f2{top:120px; right:190px;}
+.f3{bottom:22px; right:22px;}
+.f4{bottom:110px; left:22px;}
+.f5{top:78px; left:200px;}
+
+/* Animation: each one shows then hides (one after another) */
+@keyframes popFloat{
+  0%{opacity:0; transform:translateY(14px) scale(.96) rotate(-2deg);}
+  10%{opacity:1; transform:translateY(0) scale(1) rotate(0deg);}
+  35%{opacity:1; transform:translateY(-6px) scale(1.01) rotate(1deg);}
+  50%{opacity:0; transform:translateY(-14px) scale(.98) rotate(2deg);}
+  100%{opacity:0; transform:translateY(-14px) scale(.98) rotate(2deg);}
+}
+@keyframes drift{
+  0%{transform:translate(0,0)}
+  50%{transform:translate(10px,-8px)}
+  100%{transform:translate(0,0)}
+}
+.float{
+  animation: popFloat 15s infinite ease-in-out, drift 6s infinite ease-in-out;
+}
+.f1{animation-delay:0s, 0s;}
+.f2{animation-delay:3s, 1.2s;}
+.f3{animation-delay:6s, 2.4s;}
+.f4{animation-delay:9s, 3.1s;}
+.f5{animation-delay:12s, 4.0s;}
 
 .kicker{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;
@@ -271,9 +324,7 @@ h1{
 }
 
 /* Equipment carousel (fade / slide) */
-.equip{
-  padding:18px;
-}
+.equip{padding:18px;}
 .carousel{
   position:relative;
   height:320px;
@@ -306,12 +357,8 @@ h1{
   position:absolute;left:18px;bottom:16px;right:18px;
   z-index:2;
 }
-.caption .cap-title{
-  font-weight:900;font-size:18px;letter-spacing:-.2px;
-}
-.caption .cap-sub{
-  color:rgba(255,255,255,.75);font-size:12px;margin-top:4px;
-}
+.caption .cap-title{font-weight:900;font-size:18px;letter-spacing:-.2px;}
+.caption .cap-sub{color:rgba(255,255,255,.75);font-size:12px;margin-top:4px;}
 .dots{
   position:absolute;right:16px;bottom:16px;display:flex;gap:8px;z-index:3;
 }
@@ -323,19 +370,14 @@ h1{
 .dots button.active{background:var(--accent);border-color: rgba(0,0,0,.2);}
 
 /* Quote form */
-.formwrap{
-  padding:18px;
-}
+.formwrap{padding:18px;}
 form{
   display:grid;
   grid-template-columns: 1fr 1fr;
   gap:12px;
 }
 @media(max-width:720px){ form{grid-template-columns:1fr;} }
-
-.field{
-  display:flex;flex-direction:column;gap:8px;
-}
+.field{display:flex;flex-direction:column;gap:8px;}
 label{font-size:12px;color:rgba(255,255,255,.72);}
 input, select, textarea{
   background:rgba(0,0,0,.22);
@@ -347,14 +389,11 @@ input, select, textarea{
 }
 textarea{min-height:110px;resize:vertical;grid-column:1/-1;}
 small{color:rgba(255,255,255,.62);}
-
 .form-actions{
   grid-column:1/-1;
   display:flex;gap:12px;align-items:center;flex-wrap:wrap;
 }
-.hint{
-  color:rgba(255,255,255,.65);font-size:12px;
-}
+.hint{color:rgba(255,255,255,.65);font-size:12px;}
 
 /* Footer */
 footer{
@@ -402,8 +441,8 @@ footer{
 <div class="nav">
   <div class="container nav-inner">
     <div class="brand">
-      <!-- ✅ IMPORTANT: your logo file is named: logo.png.jpeg -->
-      <img src="logo.png.jpeg" alt="Pine Rock Logging Logo">
+      <!-- ✅ FIXED: your logo file is logo.png -->
+      <img src="logo.png" alt="Pine Rock Logging Logo">
       <div>
         <div class="name">Pine Rock Logging</div>
         <div class="badge">
@@ -432,7 +471,16 @@ footer{
 <section class="hero">
   <div class="container hero-grid">
 
-    <div class="card hero-left reveal in">
+    <div class="card hero-left reveal">
+      <!-- Floating photos (appear/disappear one after another) -->
+      <div class="float-deck" aria-hidden="true">
+        <div class="float f1"><img src="havester.jpg" alt=""></div>
+        <div class="float f2"><img src="forwarder.jpg" alt=""></div>
+        <div class="float f3"><img src="buncher.jpg" alt=""></div>
+        <div class="float f4"><img src="truck.jpg" alt=""></div>
+        <div class="float f5"><img src="CEO.jpeg" alt=""></div>
+      </div>
+
       <div class="kicker">
         <div class="pill">Safe operations</div>
         <div class="pill">On-time delivery</div>
@@ -454,7 +502,7 @@ footer{
     </div>
 
     <div class="card hero-right">
-      <div class="quick reveal in delay1">
+      <div class="quick reveal delay1">
         <h3>Quick Info</h3>
         <div class="qrow"><span>Service Areas</span><strong>USA • Canada</strong></div>
         <div class="qrow"><span>Phone</span><strong>+1 707 314 7056</strong></div>
@@ -463,16 +511,16 @@ footer{
         <div class="note">We can take projects anywhere work is needed.</div>
       </div>
 
-      <div class="stats">
-        <div class="stat reveal in delay2">
+      <div class="stats reveal delay2">
+        <div class="stat">
           <div class="num" data-count="21">0</div>
           <div class="lbl">Years of dependable operations</div>
         </div>
-        <div class="stat reveal in delay2">
+        <div class="stat">
           <div class="num" data-count="1200">0</div>
           <div class="lbl">Completed jobs (est.)</div>
         </div>
-        <div class="stat reveal in delay2">
+        <div class="stat">
           <div class="num" data-count="24">0</div>
           <div class="lbl">Fast response (hours)</div>
         </div>
@@ -571,7 +619,8 @@ footer{
         Send your job details. We respond fast for scheduling and pricing.
       </p>
 
-      <form class="reveal delay2" onsubmit="event.preventDefault(); alert('Quote request saved. Please contact us by phone/WhatsApp to finalize.');">
+      <form class="reveal delay2"
+        onsubmit="event.preventDefault(); alert('Quote request saved. Please contact us by phone/WhatsApp to finalize.');">
         <div class="field">
           <label>Full Name</label>
           <input type="text" placeholder="Your name" required>
@@ -684,9 +733,7 @@ function go(i, manual=false){
     timer = setInterval(next, 4200);
   }
 }
-function next(){
-  go((idx+1) % slides.length);
-}
+function next(){ go((idx+1) % slides.length); }
 updateDots();
 let timer = setInterval(next, 4200);
 </script>
